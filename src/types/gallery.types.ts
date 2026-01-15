@@ -64,7 +64,7 @@ export interface ApiResponse<T> {
 export interface ModalState {
     isOpen: boolean;
     imageId: string | null;
-    clickPosition: { x: number; y: number } | null;
+    initialRect: DOMRect | null;
 }
 
 export interface ScrollState {

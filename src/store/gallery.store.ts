@@ -28,7 +28,7 @@ export const useGalleryStore = defineStore('gallery', {
         modal: {
             isOpen: false,
             imageId: null,
-            clickPosition: null,
+            initialRect: null,
         },
 
         // Motion preferences
@@ -125,10 +125,10 @@ export const useGalleryStore = defineStore('gallery', {
         /**
          * Open modal with image
          */
-        openModal(imageId: string, clickPosition?: { x: number; y: number }) {
+        openModal(imageId: string, initialRect?: DOMRect) {
             this.modal.isOpen = true;
             this.modal.imageId = imageId;
-            this.modal.clickPosition = clickPosition || null;
+            this.modal.initialRect = initialRect || null;
             this.selectedImage = this.getImageById(imageId) || null;
 
             // Prevent body scroll
@@ -141,7 +141,7 @@ export const useGalleryStore = defineStore('gallery', {
         closeModal() {
             this.modal.isOpen = false;
             this.modal.imageId = null;
-            this.modal.clickPosition = null;
+            this.modal.initialRect = null;
             this.selectedImage = null;
 
             // Restore body scroll

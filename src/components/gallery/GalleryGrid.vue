@@ -21,7 +21,7 @@ onMounted(() => {
 });
 
 const handleCardClick = (id: string, rect: DOMRect) => {
-  store.openModal(id, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+  store.openModal(id, rect);
 };
 </script>
 
