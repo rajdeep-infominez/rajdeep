@@ -17,13 +17,24 @@ import { useReducedMotion } from '@/composables/useReducedMotion';
 // Motion Components
 import ClipReveal from '@/components/motion/ClipReveal.vue';
 import FadeInUp from '@/components/motion/FadeInUp.vue';
+import ScrollSection from '@/components/motion/ScrollSection.vue';
+
+// Composables
+import { useScrollTrigger } from '@/composables/useScrollTrigger';
 
 const store = useGalleryStore();
 const { prefersReducedMotion } = useReducedMotion();
+const { gsap, createScrollFromTo, createTimeline, isReady: scrollReady } = useScrollTrigger();
 
 const isPageReady = ref(false);
 const heroRevealed = ref(false);
 const showContent = ref(false);
+const narrativeProgress = ref(0);
+
+// Refs for scroll-animated elements
+const quoteSection = ref<HTMLElement | null>(null);
+const feedbackWord = ref<HTMLElement | null>(null);
+const decorationWord = ref<HTMLElement | null>(null);
 
 // Staggered animation delays
 const staggerDelays = {
@@ -37,6 +48,11 @@ const onHeroRevealComplete = () => {
   setTimeout(() => {
     showContent.value = true;
   }, 100);
+};
+
+// Handle narrative section progress for word emphasis
+const onNarrativeProgress = (progress: number) => {
+  narrativeProgress.value = progress;
 };
 
 onMounted(() => {
@@ -166,19 +182,131 @@ onMounted(() => {
     </section>
 
     <!-- =============================================
-         Section 2: Narrative Quote
+         Section 2: Narrative Quote (Scroll Animated)
          ============================================= -->
-    <section class="section-container bg-dark-900 py-40">
-      <div class="content-wrapper text-center max-w-5xl mx-auto">
-        <blockquote class="text-4xl md:text-6xl lg:text-7xl font-light leading-tight">
-          <span class="text-white/20">"Motion is </span>
-          <span class="text-white font-semibold">feedback</span>
-          <span class="text-white/20">, not </span>
-          <span class="text-white/40">decoration</span>
-          <span class="text-white/20">."</span>
-        </blockquote>
-      </div>
-    </section>
+    <ScrollSection
+      pin
+      :scrub="1"
+      start="top top"
+      end="+=150%"
+      :height-multiplier="1.5"
+      @progress="onNarrativeProgress"
+    >
+      <template #default="{ progress }">
+        <section 
+          ref="quoteSection"
+          class="section-container bg-dark-900 min-h-screen"
+        >
+          <!-- Animated background layers -->
+          <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div 
+              class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-accent-primary/5 to-transparent"
+              :style="{ opacity: progress * 0.5 }"
+            />
+            <div 
+              class="absolute inset-0 flex items-center justify-center"
+            >
+              <div 
+                class="w-[600px] h-[600px] bg-accent-primary/10 rounded-full blur-[150px] transition-transform duration-300"
+                :style="{ 
+                  transform: `scale(${0.5 + progress * 1.5})`,
+                  opacity: 0.3 + progress * 0.4
+                }"
+              />
+            </div>
+          </div>
+
+          <div class="content-wrapper text-center max-w-5xl mx-auto relative z-10">
+            <!-- Main Quote -->
+            <blockquote class="text-4xl md:text-6xl lg:text-8xl font-light leading-tight">
+              <!-- "Motion is" - starts dim, stays dim -->
+              <span 
+                class="quote-word transition-all duration-500"
+                :style="{ 
+                  opacity: 0.15 + progress * 0.15,
+                  transform: `translateY(${(1 - progress) * 20}px)`
+                }"
+              >
+                "Motion is
+              </span>
+              
+              <!-- "feedback" - emphasized at 0-50% progress -->
+              <span 
+                ref="feedbackWord"
+                class="quote-word-emphasis inline-block transition-all duration-500"
+                :style="{ 
+                  opacity: progress < 0.5 ? 0.3 + progress * 1.4 : 1,
+                  transform: `translateY(${(1 - Math.min(progress * 2, 1)) * 30}px) scale(${1 + (progress < 0.5 ? progress * 0.1 : 0.05)})`,
+                  color: progress > 0.3 ? 'white' : 'rgba(255,255,255,0.5)'
+                }"
+              >
+                feedback
+              </span>
+              
+              <!-- ", not" - fades in at middle -->
+              <span 
+                class="quote-word transition-all duration-500"
+                :style="{ 
+                  opacity: 0.1 + progress * 0.2,
+                  transform: `translateY(${(1 - progress) * 15}px)`
+                }"
+              >
+                , not
+              </span>
+              
+              <!-- "decoration" - emphasized at 50-100% progress -->
+              <span 
+                ref="decorationWord"
+                class="quote-word-strikethrough inline-block transition-all duration-500"
+                :class="{ 'strikethrough-active': progress > 0.6 }"
+                :style="{ 
+                  opacity: progress > 0.5 ? 0.4 + (progress - 0.5) * 0.8 : 0.3,
+                  transform: `translateY(${(1 - progress) * 25}px)`,
+                  color: progress > 0.7 ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.3)'
+                }"
+              >
+                decoration
+              </span>
+              
+              <!-- "." - fades in last -->
+              <span 
+                class="quote-word transition-all duration-500"
+                :style="{ 
+                  opacity: progress > 0.8 ? (progress - 0.8) * 5 * 0.3 : 0.1,
+                  transform: `translateY(${(1 - progress) * 10}px)`
+                }"
+              >
+                ."
+              </span>
+            </blockquote>
+
+            <!-- Progress-based subtitle -->
+            <p 
+              class="mt-12 text-lg md:text-xl text-white/30 transition-all duration-500"
+              :style="{ 
+                opacity: progress > 0.7 ? (progress - 0.7) * 3 : 0,
+                transform: `translateY(${progress > 0.7 ? 0 : 20}px)`
+              }"
+            >
+              Motion should communicate intent, not distract from it.
+            </p>
+
+            <!-- Scroll hint at bottom -->
+            <div 
+              class="absolute bottom-10 left-1/2 -translate-x-1/2 transition-opacity duration-500"
+              :style="{ opacity: progress < 0.9 ? 1 - progress : 0 }"
+            >
+              <div class="flex flex-col items-center gap-2 text-white/20">
+                <span class="text-xs tracking-widest uppercase">Keep scrolling</span>
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </section>
+      </template>
+    </ScrollSection>
 
     <!-- =============================================
          Section 3: Gallery Preview (Placeholder)
@@ -381,5 +509,37 @@ onMounted(() => {
   50% {
     transform: scale(1.3);
   }
+}
+
+/* Quote Word Styles */
+.quote-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.quote-word-emphasis {
+  font-weight: 600;
+  will-change: transform, opacity, color;
+  text-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+}
+
+.quote-word-strikethrough {
+  position: relative;
+  will-change: transform, opacity;
+}
+
+.quote-word-strikethrough::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-tertiary));
+  transition: width 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.quote-word-strikethrough.strikethrough-active::after {
+  width: 100%;
 }
 </style>
