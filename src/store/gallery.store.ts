@@ -9,6 +9,7 @@ import type {
     GalleryFilters,
     ModalState
 } from '@/types/gallery.types';
+import { MOCK_IMAGES } from '@/services/mockData';
 
 export const useGalleryStore = defineStore('gallery', {
     state: (): GalleryState & { modal: ModalState; prefersReducedMotion: boolean } => ({
@@ -207,6 +208,25 @@ export const useGalleryStore = defineStore('gallery', {
             this.searchQuery = '';
             this.activeCategory = null;
             this.closeModal();
+        },
+
+        /**
+         * Fetch initial images (Mock)
+         */
+        async fetchImages() {
+            this.isLoading = true;
+            this.error = null;
+
+            try {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                this.setImages(MOCK_IMAGES);
+            } catch (err) {
+                this.setError('Failed to load images');
+            } finally {
+                this.isLoading = false;
+            }
         },
     },
 });

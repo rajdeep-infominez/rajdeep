@@ -23,6 +23,8 @@ interface FadeInUpProps {
   ease?: string;
   /** Initial opacity */
   fromOpacity?: number;
+  /** HTML tag to render */
+  tag?: string;
 }
 
 const props = withDefaults(defineProps<FadeInUpProps>(), {
@@ -32,6 +34,7 @@ const props = withDefaults(defineProps<FadeInUpProps>(), {
   autoPlay: true,
   ease: 'power3.out',
   fromOpacity: 0,
+  tag: 'div',
 });
 
 const emit = defineEmits<{
@@ -117,9 +120,9 @@ defineExpose({
 </script>
 
 <template>
-  <div ref="elementRef" class="fade-in-up">
+  <component :is="tag" ref="elementRef" class="fade-in-up">
     <slot />
-  </div>
+  </component>
 </template>
 
 <style scoped>

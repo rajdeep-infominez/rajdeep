@@ -12,6 +12,7 @@ import { useGalleryStore } from '@/store/gallery.store';
 import TheHeader from '@/components/layout/TheHeader.vue';
 import TheFooter from '@/components/layout/TheFooter.vue';
 import ScrollProgress from '@/components/layout/ScrollProgress.vue';
+import ImageModal from '@/components/gallery/ImageModal.vue';
 
 const store = useGalleryStore();
 
@@ -50,6 +51,9 @@ onMounted(() => {
 
     <!-- Footer -->
     <TheFooter />
+
+    <!-- Gallery Lightbox -->
+    <ImageModal />
   </div>
 </template>
 

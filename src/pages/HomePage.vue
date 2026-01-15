@@ -18,6 +18,7 @@ import { useReducedMotion } from '@/composables/useReducedMotion';
 import ClipReveal from '@/components/motion/ClipReveal.vue';
 import FadeInUp from '@/components/motion/FadeInUp.vue';
 import ScrollSection from '@/components/motion/ScrollSection.vue';
+import GalleryGrid from '@/components/gallery/GalleryGrid.vue';
 
 // Composables
 import { useScrollTrigger } from '@/composables/useScrollTrigger';
@@ -309,7 +310,7 @@ onMounted(() => {
     </ScrollSection>
 
     <!-- =============================================
-         Section 3: Gallery Preview (Placeholder)
+         Section 3: Interactive Gallery
          ============================================= -->
     <section class="section-container bg-dark-800 py-32">
       <div class="content-wrapper">
@@ -318,24 +319,8 @@ onMounted(() => {
           <p class="text-white/40 text-lg">Perspective motion • Lazy loading • Depth effects</p>
         </div>
 
-        <!-- Placeholder Gallery Grid -->
-        <div class="gallery-grid">
-          <!-- Skeleton Cards (will be replaced with actual gallery in Phase 4) -->
-          <div 
-            v-for="i in 6" 
-            :key="i" 
-            class="gallery-skeleton aspect-[4/3] rounded-2xl"
-            :style="{ animationDelay: `${i * 0.15}s` }"
-          >
-            <div class="gallery-skeleton-inner" />
-          </div>
-        </div>
-
-        <div class="text-center mt-12">
-          <p class="text-white/30 text-sm">
-            ↑ Gallery with perspective effects coming in Phase 4
-          </p>
-        </div>
+        <!-- Real Gallery Grid -->
+        <GalleryGrid />
       </div>
     </section>
 
