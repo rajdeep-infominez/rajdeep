@@ -1,0 +1,368 @@
+/* ==================================================
+   Base Styles - Vue Gallery
+   ================================================== */
+
+/* Tailwind CSS v4 Import */
+@import "tailwindcss";
+
+/* Import Motion Design System */
+@import './motion-tokens.css';
+
+/* ==================================================
+   Theme Configuration for Tailwind v4
+   ================================================== */
+@theme {
+    /* Custom Colors */
+    --color-dark-900: #0a0a0f;
+    --color-dark-800: #12121a;
+    --color-dark-700: #1a1a25;
+    --color-dark-600: #232330;
+    --color-dark-500: #2d2d3d;
+
+    --color-accent-primary: #6366f1;
+    --color-accent-secondary: #8b5cf6;
+    --color-accent-tertiary: #a855f7;
+
+    --color-surface-dark: rgba(18, 18, 26, 0.8);
+    --color-surface-light: rgba(255, 255, 255, 0.05);
+
+    /* Font Families */
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-display: 'Outfit', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Custom Animations */
+    --animate-fade-in: fadeIn var(--motion-duration-base) ease-out;
+    --animate-fade-in-up: fadeInUp var(--motion-duration-base) ease-out;
+    --animate-fade-in-scale: fadeInScale var(--motion-duration-slow) ease-out;
+    --animate-skeleton-shimmer: shimmer 1.5s infinite;
+    --animate-float: float 3s ease-in-out infinite;
+
+    /* Box Shadows */
+    --shadow-depth-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-depth-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --shadow-depth-focus: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 16px 20px -10px rgba(0, 0, 0, 0.15);
+    --shadow-depth-modal: 0 40px 80px -20px rgba(0, 0, 0, 0.4), 0 30px 40px -15px rgba(0, 0, 0, 0.2);
+    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+    --shadow-glow-lg: 0 0 40px rgba(99, 102, 241, 0.4);
+
+    /* Transition Durations */
+    --duration-instant: 100ms;
+    --duration-fast: 200ms;
+    --duration-base: 400ms;
+    --duration-slow: 800ms;
+    --duration-dramatic: 1200ms;
+}
+
+/* ==================================================
+   Keyframes
+   ================================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ==================================================
+   Base Layer Styles
+   ================================================== */
+@layer base {
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Base body styles */
+    body {
+        background-color: var(--color-dark-900);
+        color: white;
+        font-family: var(--font-sans);
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Selection color */
+    ::selection {
+        background-color: rgba(99, 102, 241, 0.3);
+        color: white;
+    }
+
+    /* Focus outline */
+    :focus-visible {
+        outline: 2px solid var(--color-accent-primary);
+        outline-offset: 2px;
+    }
+
+    /* Headings */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        letter-spacing: -0.025em;
+    }
+
+    /* Links */
+    a {
+        transition: color var(--duration-fast);
+    }
+
+    a:hover {
+        color: var(--color-accent-primary);
+    }
+
+    /* Images */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: var(--color-dark-800);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--color-dark-500);
+        border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-dark-600);
+    }
+}
+
+/* ==================================================
+   Component Classes
+   ================================================== */
+/* Glass card effect */
+.glass-card {
+    background-color: var(--color-surface-light);
+    backdrop-filter: blur(16px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all var(--motion-duration-base) var(--motion-ease-smooth);
+}
+
+.glass-card:hover {
+    background-color: var(--color-surface-dark);
+    box-shadow: var(--shadow-depth-hover);
+}
+
+/* Section container */
+.section-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1.5rem;
+}
+
+/* Content wrapper */
+.content-wrapper {
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+/* Gradient text */
+.gradient-text {
+    background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary), var(--color-accent-tertiary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Skeleton loader */
+.skeleton {
+    background: linear-gradient(to right,
+            var(--color-dark-700),
+            var(--color-dark-600),
+            var(--color-dark-700));
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 0.5rem;
+}
+
+/* Button primary */
+.btn-primary {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-accent-primary);
+    color: white;
+    font-weight: 500;
+    border-radius: 0.75rem;
+    transition: all var(--duration-fast);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-accent-secondary);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Gallery grid */
+.gallery-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* Gallery card */
+.gallery-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all var(--motion-duration-base) var(--motion-ease-smooth);
+    transform-style: preserve-3d;
+}
+
+.gallery-card:hover {
+    box-shadow: var(--shadow-depth-hover);
+    transform: translateY(-8px) scale(1.02);
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-tertiary));
+    z-index: 50;
+    transform-origin: left;
+}
+
+/* Hover depth effect */
+.hover-depth {
+    transition: transform var(--motion-duration-fast) var(--motion-ease-smooth),
+        box-shadow var(--motion-duration-fast) var(--motion-ease-smooth);
+}
+
+.hover-depth:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-depth-hover);
+}
+
+/* ==================================================
+   Utility Classes
+   ================================================== */
+/* Animation delays */
+.delay-100 {
+    animation-delay: 100ms;
+}
+
+.delay-200 {
+    animation-delay: 200ms;
+}
+
+.delay-300 {
+    animation-delay: 300ms;
+}
+
+.delay-400 {
+    animation-delay: 400ms;
+}
+
+.delay-500 {
+    animation-delay: 500ms;
+}
+
+.delay-600 {
+    animation-delay: 600ms;
+}
+
+.delay-700 {
+    animation-delay: 700ms;
+}
+
+.delay-800 {
+    animation-delay: 800ms;
+}
+
+/* Perspective utilities */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.perspective-1500 {
+    perspective: 1500px;
+}
+
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
+
+/* GPU acceleration */
+.gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+}

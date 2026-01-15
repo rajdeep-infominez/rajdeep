@@ -1,0 +1,167 @@
+/* ==================================================
+   Motion Design System - CSS Custom Properties
+   ==================================================
+   This file defines the motion tokens used throughout
+   the application for consistent animation timing,
+   easing, and depth effects.
+   ================================================== */
+
+:root {
+  /* --------------------------------------------------
+     Duration Tokens
+     -------------------------------------------------- */
+  --motion-duration-instant: 0.1s;    /* Immediate feedback */
+  --motion-duration-fast: 0.2s;       /* Micro-interactions */
+  --motion-duration-base: 0.4s;       /* Standard transitions */
+  --motion-duration-slow: 0.8s;       /* Emphasis animations */
+  --motion-duration-dramatic: 1.2s;   /* Entry/exit animations */
+
+  /* --------------------------------------------------
+     Easing Functions
+     -------------------------------------------------- */
+  --motion-ease-smooth: cubic-bezier(0.33, 1, 0.68, 1);
+  --motion-ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --motion-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-ease-sharp: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* --------------------------------------------------
+     Depth Tokens (Z-axis translation values)
+     -------------------------------------------------- */
+  --motion-depth-subtle: 10px;        /* Hover lift */
+  --motion-depth-hover: 20px;         /* Card hover */
+  --motion-depth-focus: 40px;         /* Active state */
+  --motion-depth-modal: 60px;         /* Modal depth */
+
+  /* --------------------------------------------------
+     Rotation Tokens
+     -------------------------------------------------- */
+  --motion-rotation-subtle: 2deg;     /* Micro rotation */
+  --motion-rotation-tilt: 8deg;       /* Perspective tilt */
+  --motion-rotation-flip: 180deg;     /* Card flip */
+
+  /* --------------------------------------------------
+     Scale Tokens
+     -------------------------------------------------- */
+  --motion-scale-pressed: 0.98;       /* Button press */
+  --motion-scale-hover: 1.02;         /* Hover grow */
+  --motion-scale-focus: 1.05;         /* Focus emphasis */
+  --motion-scale-modal: 1.1;          /* Modal scale */
+
+  /* --------------------------------------------------
+     Perspective
+     -------------------------------------------------- */
+  --motion-perspective-sm: 500px;
+  --motion-perspective-md: 1000px;
+  --motion-perspective-lg: 1500px;
+  --motion-perspective-xl: 2000px;
+
+  /* --------------------------------------------------
+     Stagger Delays (for sequenced animations)
+     -------------------------------------------------- */
+  --motion-stagger-xs: 0.03s;
+  --motion-stagger-sm: 0.05s;
+  --motion-stagger-md: 0.08s;
+  --motion-stagger-lg: 0.12s;
+
+  /* --------------------------------------------------
+     Color Tokens
+     -------------------------------------------------- */
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #12121a;
+  --color-bg-tertiary: #1a1a25;
+  --color-bg-elevated: #232330;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-tertiary: rgba(255, 255, 255, 0.5);
+  --color-text-muted: rgba(255, 255, 255, 0.3);
+
+  --color-accent-primary: #6366f1;
+  --color-accent-secondary: #8b5cf6;
+  --color-accent-tertiary: #a855f7;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.15);
+
+  /* --------------------------------------------------
+     Surface & Glass Effects
+     -------------------------------------------------- */
+  --surface-glass: rgba(255, 255, 255, 0.03);
+  --surface-glass-hover: rgba(255, 255, 255, 0.06);
+  --surface-glass-border: rgba(255, 255, 255, 0.1);
+
+  /* --------------------------------------------------
+     Shadow Tokens (matching Tailwind config)
+     -------------------------------------------------- */
+  --shadow-depth-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-depth-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-depth-focus: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 16px 20px -10px rgba(0, 0, 0, 0.15);
+  --shadow-depth-modal: 0 40px 80px -20px rgba(0, 0, 0, 0.4), 0 30px 40px -15px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+  --shadow-glow-lg: 0 0 40px rgba(99, 102, 241, 0.4);
+}
+
+/* ==================================================
+   Reduced Motion Support
+   ================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-instant: 0s;
+    --motion-duration-fast: 0s;
+    --motion-duration-base: 0s;
+    --motion-duration-slow: 0s;
+    --motion-duration-dramatic: 0s;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==================================================
+   Utility Classes for Motion
+   ================================================== */
+.motion-safe {
+  transition-property: transform, opacity, box-shadow, filter;
+  transition-duration: var(--motion-duration-base);
+  transition-timing-function: var(--motion-ease-smooth);
+  will-change: transform, opacity;
+}
+
+.motion-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.motion-perspective {
+  perspective: var(--motion-perspective-lg);
+  transform-style: preserve-3d;
+}
+
+/* Hover depth effect */
+.hover-depth {
+  transition: transform var(--motion-duration-fast) var(--motion-ease-smooth),
+              box-shadow var(--motion-duration-fast) var(--motion-ease-smooth);
+}
+
+.hover-depth:hover {
+  transform: translateY(-4px) translateZ(var(--motion-depth-hover));
+  box-shadow: var(--shadow-depth-hover);
+}
+
+/* Press feedback */
+.press-feedback:active {
+  transform: scale(var(--motion-scale-pressed));
+  transition-duration: var(--motion-duration-instant);
+}
+
+/* Glow effect on hover */
+.hover-glow:hover {
+  box-shadow: var(--shadow-glow);
+}
