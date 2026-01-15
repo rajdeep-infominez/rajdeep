@@ -11,6 +11,7 @@ import { useGalleryStore } from '@/store/gallery.store';
 // Layout components
 import TheHeader from '@/components/layout/TheHeader.vue';
 import TheFooter from '@/components/layout/TheFooter.vue';
+import ScrollProgress from '@/components/layout/ScrollProgress.vue';
 
 const store = useGalleryStore();
 
@@ -28,6 +29,9 @@ onMounted(() => {
 
 <template>
   <div class="app-wrapper min-h-screen flex flex-col bg-dark-900">
+    <!-- Scroll Progress Indicator -->
+    <ScrollProgress :height="3" position="top" />
+
     <!-- Header -->
     <TheHeader />
 
